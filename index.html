@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIRI — Sovereign AI for Alternative Investments | 한국인프라연구원</title>
+<meta name="description" content="대체투자 인지형 자산관리 플랫폼 APEX. 30년 도메인 전문성 × AI 온톨로지 = 대체투자의 게임 체인저. 한국인프라연구원(주)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #06080c;
+  --bg-secondary: #0b0f18;
+  --bg-tertiary: #101624;
+  --bg-card: #0d1220;
+  --bg-card-hover: #111830;
+  --accent: #00d4ff;
+  --accent-dim: #0098b8;
+  --accent-glow: rgba(0, 212, 255, 0.15);
+  --accent-warm: #ff6b35;
+  --accent-gold: #ffd700;
+  --text-primary: #e8ecf4;
+  --text-secondary: #8892a8;
+  --text-dim: #4a5568;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-accent: rgba(0, 212, 255, 0.2);
+  --gradient-hero: linear-gradient(135deg, #06080c 0%, #0a1628 40%, #0f1d35 70%, #06080c 100%);
+  --gradient-card: linear-gradient(145deg, rgba(13, 18, 32, 0.8), rgba(16, 22, 36, 0.4));
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 3px; }
+
+/* ─── NAV ─── */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 3rem;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px);
+  background: rgba(6, 8, 12, 0.7);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s ease;
+}
+.nav.scrolled {
+  background: rgba(6, 8, 12, 0.92);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+  position: relative;
+}
+.nav-logo-icon::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.nav-logo-text span { color: var(--accent); }
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent) !important;
+  border-radius: 6px;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s !important;
+}
+.nav-cta:hover {
+  background: var(--accent) !important;
+  color: var(--bg-primary) !important;
+}
+.nav-cta::after { display: none !important; }
+
+/* Mobile nav */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 1001;
+}
+.nav-hamburger span {
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  transition: all 0.3s;
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-hero);
+  overflow: hidden;
+  padding: 120px 3rem 80px;
+}
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 70%);
+}
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: orbFloat 12s ease-in-out infinite alternate;
+}
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.15), transparent 70%);
+  top: 10%; left: 20%;
+}
+.hero-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.08), transparent 70%);
+  bottom: 20%; right: 15%;
+  animation-delay: -6s;
+}
+.hero-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(0, 152, 184, 0.12), transparent 70%);
+  top: 50%; left: 60%;
+  animation-delay: -3s;
+}
+@keyframes orbFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, -20px) scale(1.1); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.8s ease-out 0.15s both;
+}
+.hero-title .line { display: block; }
+.hero-title .accent { color: var(--accent); }
+.hero-title .accent-warm {
+  background: linear-gradient(135deg, var(--accent-warm), #ff9f6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  font-weight: 400;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.8s ease-out 0.45s both;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+.hero-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── SECTION COMMON ─── */
+section {
+  padding: 100px 3rem;
+  position: relative;
+}
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 640px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+/* ─── PHILOSOPHY (SOVEREIGN AI) ─── */
+.philosophy {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+.philosophy-visual {
+  position: relative;
+  aspect-ratio: 1;
+  max-width: 480px;
+}
+.philosophy-rings {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.p-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.p-ring-outer {
+  width: 90%; height: 90%;
+  border-color: rgba(0, 212, 255, 0.1);
+  animation: ringRotate 30s linear infinite;
+}
+.p-ring-mid {
+  width: 65%; height: 65%;
+  border-color: rgba(0, 212, 255, 0.15);
+  animation: ringRotate 20s linear infinite reverse;
+}
+.p-ring-inner {
+  width: 40%; height: 40%;
+  border-color: rgba(0, 212, 255, 0.25);
+  animation: ringRotate 15s linear infinite;
+}
+.p-ring-core {
+  width: 22%; height: 22%;
+  border-color: var(--accent);
+  background: rgba(0, 212, 255, 0.05);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.15), inset 0 0 30px rgba(0, 212, 255, 0.05);
+}
+.p-ring-core span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--accent);
+}
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.p-ring-dot {
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+}
+.p-ring-outer .p-ring-dot { top: 0; left: 50%; transform: translate(-50%, -50%); }
+.p-ring-mid .p-ring-dot { bottom: 10%; right: 5%; }
+.p-ring-inner .p-ring-dot { top: 15%; left: 5%; }
+
+.sovereignty-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.sovereignty-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.sovereignty-item:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+.sovereignty-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+}
+.sovereignty-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+.sovereignty-item p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── APEX PLATFORM ─── */
+.apex-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.apex-card {
+  padding: 1.5rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: center;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.apex-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.apex-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 212, 255, 0.08);
+}
+.apex-card:hover::before { opacity: 1; }
+.apex-card-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+.apex-card h4 {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+.apex-card p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── 7-LAYER STACK ─── */
+.stack-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stack-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.stack-layer {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+  position: relative;
+}
+.stack-layer:last-child { border-bottom: none; }
+.stack-layer:hover {
+  background: rgba(0, 212, 255, 0.02);
+}
+.stack-layer:hover .layer-num { color: var(--accent); border-color: var(--accent); }
+.layer-num {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-dim);
+  border: 2px solid var(--text-dim);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+.layer-info h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.layer-info p {
+  font-size: 0.83rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.layer-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.tech-tag {
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ─── OASE 2.0 ─── */
+.oase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.oase-axis-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.oase-axis-card {
+  padding: 1.5rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+.oase-axis-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+}
+.oase-axis-letter {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.oase-axis-card h4 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.oase-axis-card p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.oase-dualloop {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  position: relative;
+}
+.oase-dualloop h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+.dual-loop-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.dual-loop-item:last-child { border-bottom: none; }
+.dual-loop-item .loop-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.loop-speed {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.dual-loop-item p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.oase-stats-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.oase-stat-box {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 8px;
+}
+.oase-stat-box .num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.oase-stat-box .lbl {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ─── PRODUCT PORTFOLIO ─── */
+.products-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.product-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.product-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  transform: scaleX(0);
+  transition: transform 0.4s;
+}
+.product-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+.product-card:hover::after { transform: scaleX(1); }
+.product-status {
+  display: inline-block;
+  padding: 3px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+}
+.status-live { background: rgba(0, 212, 255, 0.1); color: var(--accent); border: 1px solid rgba(0, 212, 255, 0.2); }
+.status-dev { background: rgba(255, 215, 0, 0.08); color: var(--accent-gold); border: 1px solid rgba(255, 215, 0, 0.15); }
+.status-plan { background: rgba(255, 255, 255, 0.04); color: var(--text-dim); border: 1px solid var(--border); }
+.product-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.product-card h3 span {
+  color: var(--accent);
+}
+.product-card .product-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+.product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.product-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dim);
+}
+
+/* ─── USE CASES ─── */
+.usecases-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.usecase-card {
+  padding: 2rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.3s;
+  position: relative;
+}
+.usecase-card:hover {
+  border-color: var(--border-accent);
+}
+.usecase-number {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(0, 212, 255, 0.08);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.usecase-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.usecase-query {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.usecase-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+}
+.usecase-time {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent-warm);
+}
+.usecase-vs {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ─── MOAT ─── */
+.moat-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.moat-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 3rem;
+  position: relative;
+  padding-left: 2rem;
+  border-left: 3px solid var(--accent);
+}
+.moat-quote .em {
+  color: var(--accent);
+  font-style: italic;
+}
+.moat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.moat-item {
+  padding: 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: all 0.3s;
+}
+.moat-item:hover { border-color: var(--border-accent); }
+.moat-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.moat-item p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.moat-icon {
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 212, 255, 0.08);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+/* ─── KNOWLEDGE GOVERNANCE ─── */
+.governance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.gov-card {
+  padding: 2rem;
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.gov-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+.gov-card .gov-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.gov-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.gov-features {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.gov-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.gov-feature::before {
+  content: '→';
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* ─── FOUNDER ─── */
+.founder-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.founder-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.founder-portrait {
+  aspect-ratio: 3/4;
+  background: linear-gradient(145deg, var(--bg-card), var(--bg-tertiary));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.founder-portrait::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0, 212, 255, 0.05));
+}
+.founder-initials {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(0, 212, 255, 0.15);
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+}
+.founder-name-plate {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.founder-name-plate h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.founder-name-plate p {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+.founder-bio h4 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.founder-bio .career-path {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+.career-item {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.career-item:last-child { border-bottom: none; }
+.career-org {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--accent);
+}
+.career-role {
+  color: var(--text-secondary);
+}
+.founder-patents {
+  margin-top: 1.5rem;
+}
+.founder-patents h5 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+.patent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.patent-item {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding-left: 1rem;
+  position: relative;
+}
+.patent-item::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 0.5rem;
+  top: 4px;
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 3rem;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.08), transparent 60%);
+  border-radius: 50%;
+}
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.cta-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-primary:hover {
+  background: #33ddff;
+  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
+}
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  padding: 3rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.footer-legal {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.footer-right {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.footer-link {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-link:hover { color: var(--accent); }
+
+/* ─── SCROLL ANIMATIONS ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  section { padding: 80px 2rem; }
+  .philosophy-grid, .oase-grid, .governance-grid, .founder-grid {
+    grid-template-columns: 1fr;
+  }
+  .apex-overview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .products-grid, .usecases-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stack-layer {
+    grid-template-columns: 60px 1fr;
+  }
+  .layer-tech {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-left: 76px;
+  }
+  .philosophy-visual {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .founder-grid { grid-template-columns: 1fr; }
+  .founder-portrait { max-width: 280px; margin: 0 auto; }
+}
+
+@media (max-width: 768px) {
+  .nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(6, 8, 12, 0.97);
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+  }
+  section { padding: 60px 1.25rem; }
+  .hero { padding: 100px 1.25rem 60px; }
+  .hero-stats { gap: 1.5rem; }
+  .apex-overview-grid { grid-template-columns: repeat(2, 1fr); }
+  .products-grid, .usecases-grid, .moat-grid { grid-template-columns: 1fr; }
+  .oase-axis-cards { grid-template-columns: 1fr; }
+  .stack-layer { grid-template-columns: 1fr; padding: 1.25rem; }
+  .layer-num { margin-bottom: 0.5rem; }
+  .layer-tech { padding-left: 0; }
+  .career-item { grid-template-columns: 1fr; gap: 2px; }
+  .footer-content { flex-direction: column; text-align: center; }
+  .footer-right { flex-direction: column; gap: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">K</div>
+    <div class="nav-logo-text">KIRI<span>.</span></div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#philosophy">Sovereign AI</a></li>
+    <li><a href="#apex">APEX Platform</a></li>
+    <li><a href="#stack">Tech Stack</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Sovereign AI · Cognitive Asset Management
+    </div>
+    <h1 class="hero-title">
+      <span class="line">도메인 지식의 <span class="accent">주권</span>을</span>
+      <span class="line">가진 자가 <span class="accent-warm">AI 시대의</span></span>
+      <span class="line">진정한 승자입니다</span>
+    </h1>
+    <p class="hero-subtitle">
+      30년간 축적된 자본시장·부동산·인프라 도메인 전문지식을<br>
+      AI 온톨로지로 구조화하여 무한 복제 가능한 디지털 서비스로 전환합니다.<br>
+      <strong style="color: var(--text-primary);">한국인프라연구원(주) — KIRI</strong>
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-number">1,023<span style="font-size:1.2rem;">+</span></div>
+        <div class="hero-stat-label">OWL 온톨로지 트리플</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number">7</div>
+        <div class="hero-stat-label">자율 AI 에이전트</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number">30<span style="font-size:1.2rem;">yr</span></div>
+        <div class="hero-stat-label">도메인 전문성</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number">100<span style="font-size:1.2rem;">%</span></div>
+        <div class="hero-stat-label">망분리 규정 준수</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span>Explore</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="section-container">
+    <div class="philosophy-grid">
+      <div class="reveal">
+        <div class="section-label">Core Philosophy</div>
+        <h2 class="section-title">소버린 AI<br>아키텍처</h2>
+        <p class="section-desc" style="margin-bottom:2rem;">
+          데이터 주권, 모델 주권, 인프라 주권을 모두 자체적으로 확보하여 외부 클라우드 API에 의존하지 않는 AI 시스템.
+          한국 금융기관의 핵심 규제인 망분리 규정을 100% 충족하는 유일한 아키텍처입니다.
+        </p>
+        <div class="sovereignty-items">
+          <div class="sovereignty-item">
+            <div class="sovereignty-icon">🔐</div>
+            <div>
+              <h4>데이터 주권 (Data Sovereignty)</h4>
+              <p>모든 고객 데이터가 온프레미스에서 처리되며, 외부 API로의 전송이 제로입니다. 전자금융감독규정 제14조의2 완전 충족.</p>
+            </div>
+          </div>
+          <div class="sovereignty-item">
+            <div class="sovereignty-icon">🧠</div>
+            <div>
+              <h4>모델 주권 (Model Sovereignty)</h4>
+              <p>한국산 오픈소스 LLM 3종(EXAONE, Solar Pro, Kanana)을 자체 서버에서 운영. 외부 모델 API 의존도 제로.</p>
+            </div>
+          </div>
+          <div class="sovereignty-item">
+            <div class="sovereignty-icon">🏗️</div>
+            <div>
+              <h4>인프라 주권 (Infra Sovereignty)</h4>
+              <p>K3s 기반 경량 컨테이너 오케스트레이션으로 자체 인프라 운영. FuriosaAI NPU와의 전략적 협력으로 완전한 하드웨어 주권 확보 추진 중.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="philosophy-visual reveal reveal-delay-2">
+        <div class="philosophy-rings">
+          <div class="p-ring p-ring-outer"><div class="p-ring-dot"></div></div>
+          <div class="p-ring p-ring-mid"><div class="p-ring-dot"></div></div>
+          <div class="p-ring p-ring-inner"><div class="p-ring-dot"></div></div>
+          <div class="p-ring p-ring-core"><span>APEX</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APEX PLATFORM -->
+<section id="apex">
+  <div class="section-container">
+    <div class="section-label reveal">APEX Platform</div>
+    <h2 class="section-title reveal">지식 × 추론 × 실행<br>= 인지형 운영체제</h2>
+    <p class="section-desc reveal">
+      APEX는 단순한 AI 챗봇이 아닙니다. 온톨로지 기반 지식 구조, 인과 DAG 추론 엔진,
+      7개 자율 에이전트가 유기적으로 결합된 대체투자 인지형 자산관리 플랫폼입니다.
+    </p>
+    <div class="apex-overview-grid">
+      <div class="apex-card reveal">
+        <div class="apex-card-icon">🏛️</div>
+        <h4>4계층 OWL 온톨로지</h4>
+        <p>W3C 표준 기반<br>1,023+ 트리플<br>환각 원천 차단</p>
+      </div>
+      <div class="apex-card reveal reveal-delay-1">
+        <div class="apex-card-icon">🔮</div>
+        <h4>OASE 2.0 인과 DAG</h4>
+        <p>DoWhy/EconML 기반<br>World Model 시뮬레이션<br>인과관계 추론</p>
+      </div>
+      <div class="apex-card reveal reveal-delay-2">
+        <div class="apex-card-icon">🌀</div>
+        <h4>퍼지 온톨로지</h4>
+        <p>애매성 수치화<br>0.0~1.0 진리도<br>전문가급 판단</p>
+      </div>
+      <div class="apex-card reveal reveal-delay-3">
+        <div class="apex-card-icon">🤖</div>
+        <h4>7-Agent 시스템</h4>
+        <p>자율 전문가 협업<br>병렬 처리 & 합의<br>실시간 의사결정</p>
+      </div>
+      <div class="apex-card reveal reveal-delay-4">
+        <div class="apex-card-icon">🛡️</div>
+        <h4>주권형 AI 스택</h4>
+        <p>한국산 LLM 탑재<br>온프레미스 배포<br>망분리 100% 준수</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7-LAYER STACK -->
+<section class="stack-section" id="stack">
+  <div class="section-container">
+    <div class="section-label reveal">Technology Architecture</div>
+    <h2 class="section-title reveal">7-Layer<br>Sovereign AI Tech Stack</h2>
+    <p class="section-desc reveal">
+      모든 기술 구성 요소는 소버린 AI 5대 기준의 가중 평가를 통해 선정되었으며,
+      각 레이어는 독립적으로 교체 가능한 모듈화 아키텍처를 따릅니다.
+    </p>
+    <div class="stack-layers reveal">
+      <div class="stack-layer">
+        <div class="layer-num">L1</div>
+        <div class="layer-info">
+          <h4>지식 기반 — 온톨로지 & 지식 그래프</h4>
+          <p>30년 도메인 전문성을 기계가 추론 가능한 형식지로 변환. 4계층 OWL 수직 구조 + 퍼지 온톨로지.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">OWL 2</span>
+          <span class="tech-tag">FalkorDB</span>
+          <span class="tech-tag">Protégé</span>
+          <span class="tech-tag">SPARQL</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L2</div>
+        <div class="layer-info">
+          <h4>추론 엔진 — 인과 DAG & World Model</h4>
+          <p>상관관계를 넘어 인과관계 기반 시뮬레이션. OASE 2.0 이중 루프 아키텍처.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">DoWhy</span>
+          <span class="tech-tag">EconML</span>
+          <span class="tech-tag">OASE 2.0</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L3</div>
+        <div class="layer-info">
+          <h4>주권형 LLM 스택 — 3-Tier Sovereign Model</h4>
+          <p>업무 복잡도별 3계층 분산 배치. GPU 비용 8배 절감, vLLM 서빙.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">EXAONE Deep 32B</span>
+          <span class="tech-tag">Solar Pro 2</span>
+          <span class="tech-tag">Kanana 1.5</span>
+          <span class="tech-tag">vLLM</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L4</div>
+        <div class="layer-info">
+          <h4>에이전트 프레임워크 — 7-Agent 협업</h4>
+          <p>LangGraph 기반 7개 전문 에이전트. MCP 표준 통신 프로토콜로 도구 연결.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">LangGraph</span>
+          <span class="tech-tag">MCP</span>
+          <span class="tech-tag">FastMCP</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L5</div>
+        <div class="layer-info">
+          <h4>데이터 인프라 — 벡터 DB & 지식 저장소</h4>
+          <p>DomainKV/AKU 원자 지식 단위 + EdgeQuake GraphRAG. 검색 정확도 40~60% 향상.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">Qdrant</span>
+          <span class="tech-tag">DomainKV</span>
+          <span class="tech-tag">EdgeQuake</span>
+          <span class="tech-tag">AKU</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L6</div>
+        <div class="layer-info">
+          <h4>배포 & 보안 — 온프레미스 인프라</h4>
+          <p>K3s 경량 Kubernetes + Zero Trust 보안. 7-Gate HITL 품질 관리 프로세스.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">K3s</span>
+          <span class="tech-tag">Zero Trust</span>
+          <span class="tech-tag">7-Gate HITL</span>
+        </div>
+      </div>
+      <div class="stack-layer">
+        <div class="layer-num">L7</div>
+        <div class="layer-info">
+          <h4>API & 통합 — 게이트웨이 & 프로토콜</h4>
+          <p>FastAPI + gRPC 이중 프로토콜 구조. React 프론트엔드 대시보드.</p>
+        </div>
+        <div class="layer-tech">
+          <span class="tech-tag">FastAPI</span>
+          <span class="tech-tag">gRPC</span>
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Protobuf</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OASE 2.0 -->
+<section id="oase">
+  <div class="section-container">
+    <div class="section-label reveal">Cognitive Framework</div>
+    <h2 class="section-title reveal">OASE 2.0</h2>
+    <p class="section-desc reveal">
+      Ontology → Agentic → Sense/Evolve + World Model.<br>
+      KIRI가 독자 개발한 인지형 AI 아키텍처 프레임워크.
+    </p>
+    <div class="oase-grid">
+      <div class="oase-axis-cards reveal">
+        <div class="oase-axis-card">
+          <div class="oase-axis-letter">O</div>
+          <h4>Ontology</h4>
+          <p>4계층 OWL 온톨로지로 도메인 지식을 구조화. 1,023+ 트리플이 AI의 판단 근거를 형성합니다.</p>
+        </div>
+        <div class="oase-axis-card">
+          <div class="oase-axis-letter">A</div>
+          <h4>Agentic</h4>
+          <p>7개 전문 에이전트가 자율적으로 협업하며 복잡한 의사결정을 병렬 처리합니다.</p>
+        </div>
+        <div class="oase-axis-card">
+          <div class="oase-axis-letter">S</div>
+          <h4>Sense</h4>
+          <p>실시간 시장 데이터를 감지하고, 인과 DAG와 교차 검증하여 이상 신호를 포착합니다.</p>
+        </div>
+        <div class="oase-axis-card">
+          <div class="oase-axis-letter">E</div>
+          <h4>Evolve</h4>
+          <p>온톨로지와 인과 모델을 지속적으로 자기 보정하는 살아있는 시스템으로 진화합니다.</p>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="oase-dualloop">
+          <h3>Dual-Loop Architecture</h3>
+          <div class="dual-loop-item">
+            <div class="loop-name">
+              Inner Loop <span class="loop-speed">초 단위</span>
+            </div>
+            <p>O ↔ W ↔ A — 온톨로지와 World Model 간의 즉각적 상호작용으로 실시간 추론을 수행합니다.</p>
+          </div>
+          <div class="dual-loop-item">
+            <div class="loop-name">
+              Outer Loop <span class="loop-speed">분 단위</span>
+            </div>
+            <p>A → S → E → O → W — 감지된 시장 변화가 전체 온톨로지를 업데이트하는 장주기 학습 루프입니다.</p>
+          </div>
+        </div>
+        <div class="oase-stats-row">
+          <div class="oase-stat-box">
+            <div class="num">50</div>
+            <div class="lbl">인과 DAG 노드</div>
+          </div>
+          <div class="oase-stat-box">
+            <div class="num">79</div>
+            <div class="lbl">인과 엣지</div>
+          </div>
+          <div class="oase-stat-box">
+            <div class="num">10</div>
+            <div class="lbl">최장 홉 체인</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="products">
+  <div class="section-container">
+    <div class="section-label reveal">Product Portfolio</div>
+    <h2 class="section-title reveal">KiriFin<br>플랫폼 생태계</h2>
+    <p class="section-desc reveal">
+      대체투자 자산 유형별로 특화된 SaaS 플랫폼과,
+      도메인 지식을 거래할 수 있는 마켓플레이스를 구축합니다.
+    </p>
+    <div class="products-grid">
+      <div class="product-card reveal">
+        <span class="product-status status-live">MVP COMPLETE</span>
+        <h3>KiriFin:<span>Debt</span></h3>
+        <p class="product-desc">채권·직접대출·CLO 포트폴리오 관리 플랫폼. 150개 엔티티, 120개 관계, 35개 결정 규칙으로 구성된 도메인 Kit 탑재.</p>
+        <div class="product-tags">
+          <span class="product-tag">Direct Lending</span>
+          <span class="product-tag">CLO</span>
+          <span class="product-tag">IG Bond</span>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1">
+        <span class="product-status status-live">MVP COMPLETE</span>
+        <h3>KiriFin:<span>Real Estate</span></h3>
+        <p class="product-desc">기관급 부동산 투자 대시보드. 시세 분석, 입지 분석, 투자 가치 평가, 리스크 분석을 통합 제공합니다.</p>
+        <div class="product-tags">
+          <span class="product-tag">기관투자</span>
+          <span class="product-tag">권리분석</span>
+          <span class="product-tag">수익률</span>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-2">
+        <span class="product-status status-dev">IN DEVELOPMENT</span>
+        <h3>KiriFin:<span>Infra</span></h3>
+        <p class="product-desc">인프라 M&A 및 프로젝트 파이낸스 전문 플랫폼. 예비 실사 보고서를 4분 이내에 자동 생성합니다.</p>
+        <div class="product-tags">
+          <span class="product-tag">인프라 M&A</span>
+          <span class="product-tag">PF</span>
+          <span class="product-tag">Due Diligence</span>
+        </div>
+      </div>
+      <div class="product-card reveal">
+        <span class="product-status status-dev">DESIGN COMPLETE</span>
+        <h3>KiriFin:<span>PEF</span></h3>
+        <p class="product-desc">사모펀드 벤치마크 분석 플랫폼. Blackstone/KKR/Carlyle 벤치마크 기준의 월드클래스 설계.</p>
+        <div class="product-tags">
+          <span class="product-tag">Private Equity</span>
+          <span class="product-tag">Benchmark</span>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1">
+        <span class="product-status status-dev">DESIGN COMPLETE</span>
+        <h3>KiriFin:<span>Auction</span></h3>
+        <p class="product-desc">부동산 경매 SaaS. 12만 공인중개사를 타깃으로 경매 물건 자동 권리분석 및 수익률 시뮬레이션을 제공합니다.</p>
+        <div class="product-tags">
+          <span class="product-tag">경매분석</span>
+          <span class="product-tag">공인중개사</span>
+          <span class="product-tag">SaaS</span>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-2">
+        <span class="product-status status-plan">PLANNING</span>
+        <h3>KLAIR <span>Marketplace</span></h3>
+        <p class="product-desc">도메인 Kit 앱스토어. 전문가가 구축한 EdgeQuake GraphRAG Kit을 거래할 수 있는 지식 마켓플레이스.</p>
+        <div class="product-tags">
+          <span class="product-tag">Domain Kit</span>
+          <span class="product-tag">PoSK</span>
+          <span class="product-tag">ERS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="usecases">
+  <div class="section-container">
+    <div class="section-label reveal">Use Cases</div>
+    <h2 class="section-title reveal">TaaS 핵심 시나리오</h2>
+    <p class="section-desc reveal">
+      Time-as-a-Service — 전문가가 2~3일 걸리던 분석을 30초~4분으로 단축합니다.
+    </p>
+    <div class="usecases-grid">
+      <div class="usecase-card reveal">
+        <div class="usecase-number">01</div>
+        <h4>CLO 포트폴리오 리스크 분석</h4>
+        <div class="usecase-query">
+          "보유 중인 CLO 포트폴리오의 금리 1% 상승 시 NAV 영향을 분석하고, 리밸런싱 방안을 제시해주세요."
+        </div>
+        <div class="usecase-result">
+          <div class="usecase-time">~60초</div>
+          <div class="usecase-vs">vs 전문가 2~3일</div>
+        </div>
+      </div>
+      <div class="usecase-card reveal reveal-delay-1">
+        <div class="usecase-number">02</div>
+        <h4>부동산 경매 자동 분석</h4>
+        <div class="usecase-query">
+          "서울 강남구 2026-1234 경매 물건의 권리분석과 예상 수익률을 분석해주세요."
+        </div>
+        <div class="usecase-result">
+          <div class="usecase-time">~30초</div>
+          <div class="usecase-vs">vs 전문가 반나절</div>
+        </div>
+      </div>
+      <div class="usecase-card reveal reveal-delay-2">
+        <div class="usecase-number">03</div>
+        <h4>인프라 M&A 예비 실사</h4>
+        <div class="usecase-query">
+          "○○○ 고속도로 운영권 인수를 위한 예비 실사 보고서를 작성해주세요."
+        </div>
+        <div class="usecase-result">
+          <div class="usecase-time">~4분</div>
+          <div class="usecase-vs">vs 컨설팅펌 2~4주</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETITIVE MOAT -->
+<section class="moat-section" id="moat">
+  <div class="section-container">
+    <div class="section-label reveal">Competitive Moat</div>
+    <div class="moat-quote reveal">
+      "크레인은 빌려도, <span class="em">설계도는 금고에 보관한다</span>"<br>
+      — KIRI 도메인 주권 철학
+    </div>
+    <div class="moat-grid">
+      <div class="moat-item reveal">
+        <h4><span class="moat-icon">🏛️</span>30년 도메인 온톨로지</h4>
+        <p>LLM은 교체 가능한 부품이지만, 1,023+ 트리플의 OWL 온톨로지와 7-Gate HITL로 검증된 도메인 지식은 2~3년의 시간이 소요되는 진입 장벽입니다.</p>
+      </div>
+      <div class="moat-item reveal reveal-delay-1">
+        <h4><span class="moat-icon">🔒</span>망분리 100% 준수</h4>
+        <p>21개 기술 구성 요소 중 19개가 오픈소스, 모든 데이터와 모델이 온프레미스에서 운영. 외부 API 호출 제로로 한국 금융 규제를 완전히 충족합니다.</p>
+      </div>
+      <div class="moat-item reveal reveal-delay-2">
+        <h4><span class="moat-icon">🇰🇷</span>한국어 특화 AI</h4>
+        <p>한국산 LLM 3종 모두 한국어 성능 세계 최고 수준. 한국 법률·금융 용어에 특화된 도메인 온톨로지가 환각을 원천 차단합니다.</p>
+      </div>
+      <div class="moat-item reveal reveal-delay-3">
+        <h4><span class="moat-icon">♾️</span>한계비용 ≈ 0</h4>
+        <p>TaaS 모델의 핵심 — 고객 1명 추가 시 추가 비용이 거의 없습니다. 3-Tier 라우팅으로 GPU 비용 8배 절감, 무한 확장 가능한 수익 구조.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KNOWLEDGE GOVERNANCE -->
+<section id="governance">
+  <div class="section-container">
+    <div class="section-label reveal">Knowledge Governance</div>
+    <h2 class="section-title reveal">지식 거버넌스<br>프레임워크</h2>
+    <p class="section-desc reveal">
+      AI가 70~95%를 생성하고, 30년 전문가가 확정합니다.
+      블록체인 합의 알고리즘에서 영감을 받은 세계 최초의 지식 검증 체계.
+    </p>
+    <div class="governance-grid">
+      <div class="gov-card reveal">
+        <h3>PoSK</h3>
+        <div class="gov-subtitle">Proof-of-Staked-Knowledge</div>
+        <p>경제적 자본 대신 도메인 지식을 스테이킹하는 세계 최초의 합의 알고리즘. 지식 스테이킹 + 합의 투표 + 보상/패널티 구조로 탈중앙화된 온톨로지 품질 관리를 실현합니다.</p>
+        <div class="gov-features">
+          <div class="gov-feature">지식 기여도 기반 스테이킹</div>
+          <div class="gov-feature">전문가 합의 투표 메커니즘</div>
+          <div class="gov-feature">품질 보상 & 패널티 체계</div>
+        </div>
+      </div>
+      <div class="gov-card reveal reveal-delay-1">
+        <h3>ERS</h3>
+        <div class="gov-subtitle">Expert Reliability Score (0~1000)</div>
+        <p>은행의 신용평가를 지식 도메인에 적용한 혁신적 시스템. KLAIR 마켓플레이스에서 도메인 Kit의 신뢰도를 객관적으로 표시하여 구매자가 품질을 사전 판단할 수 있습니다.</p>
+        <div class="gov-features">
+          <div class="gov-feature">기여 품질 정량화 (0~1000점)</div>
+          <div class="gov-feature">도메인 Kit 신뢰도 공개 표시</div>
+          <div class="gov-feature">DomainBank 7-Layer 거버넌스 연동</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder-section" id="founder">
+  <div class="section-container">
+    <div class="section-label reveal">Founder</div>
+    <h2 class="section-title reveal">CEO & Chief<br>Domain Architect</h2>
+    <div class="founder-grid">
+      <div class="founder-portrait reveal">
+        <div class="founder-initials">Dr.K</div>
+        <div class="founder-name-plate">
+          <h3>Dr. 김성욱</h3>
+          <p>경영학 박사</p>
+        </div>
+      </div>
+      <div class="founder-bio reveal reveal-delay-1">
+        <h4>30년 자본시장 · 대체투자 도메인 전문가</h4>
+        <div class="career-path">
+          <div class="career-item">
+            <div class="career-org">KRX 한국거래소</div>
+            <div class="career-role">자본시장 운영·제도 설계</div>
+          </div>
+          <div class="career-item">
+            <div class="career-org">NPS 국민연금</div>
+            <div class="career-role">대체투자 자산 운용</div>
+          </div>
+          <div class="career-item">
+            <div class="career-org">SK증권</div>
+            <div class="career-role">IB·구조화금융</div>
+          </div>
+          <div class="career-item">
+            <div class="career-org">독립 컨설턴트</div>
+            <div class="career-role">인프라 M&A, 부동산 경매, SME 자문 30년+</div>
+          </div>
+        </div>
+        <div class="founder-patents">
+          <h5>지적재산 포트폴리오</h5>
+          <div class="patent-list">
+            <div class="patent-item">나노버블 수생성 특허 — 등록 결정 (10-2023-0155274)</div>
+            <div class="patent-item">다공성 탄소복합 전극 특허</div>
+            <div class="patent-item">음파 수생성 특허 — Water→H₂ 밸류체인</div>
+            <div class="patent-item">OPU / ORU SoC 특허 — 출원 준비 중</div>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <h5 style="font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; margin-bottom: 0.75rem;">전략적 파트너십</h5>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span class="tech-tag" style="font-size: 0.75rem; padding: 6px 14px;">EG자산평가</span>
+            <span class="tech-tag" style="font-size: 0.75rem; padding: 6px 14px;">KVA</span>
+            <span class="tech-tag" style="font-size: 0.75rem; padding: 6px 14px;">FuriosaAI</span>
+            <span class="tech-tag" style="font-size: 0.75rem; padding: 6px 14px;">NIPA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-content">
+    <div class="section-label reveal" style="justify-content: center;">
+      Get in Touch
+    </div>
+    <h2 class="cta-title reveal">
+      대체투자의 미래를<br>함께 설계합니다
+    </h2>
+    <p class="cta-subtitle reveal">
+      KIRI의 소버린 AI 플랫폼에 대해 더 알고 싶으시다면,<br>
+      언제든 연락해 주십시오.
+    </p>
+    <div class="cta-buttons reveal">
+      <a href="mailto:contact@ontology.ai.kr" class="btn-primary">
+        ✉ 문의하기
+      </a>
+      <a href="#apex" class="btn-outline">
+        ↑ 플랫폼 다시 보기
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-left">
+      <div class="footer-logo">한국인프라연구원(주) · KIRI</div>
+      <div class="footer-legal">© 2026 Korea Infrastructure Research Institute. All Rights Reserved.</div>
+    </div>
+    <div class="footer-right">
+      <a href="https://www.ontology.ai.kr" class="footer-link">ontology.ai.kr</a>
+      <a href="mailto:contact@ontology.ai.kr" class="footer-link">contact@ontology.ai.kr</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Mobile nav toggle
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// Close mobile nav on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  });
+});
+
+// Scroll reveal
+const revealElements = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+revealElements.forEach(el => observer.observe(el));
+
+// Smooth counter animation for hero stats
+function animateCounters() {
+  document.querySelectorAll('.hero-stat-number').forEach(el => {
+    const text = el.textContent;
+    const match = text.match(/(\d[\d,]*)/);
+    if (!match) return;
+    const target = parseInt(match[1].replace(/,/g, ''));
+    const suffix = text.replace(match[0], '');
+    const duration = 2000;
+    const start = performance.now();
+    
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+      el.innerHTML = current.toLocaleString() + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+// Trigger counter animation when hero is visible
+const heroObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    animateCounters();
+    heroObserver.disconnect();
+  }
+}, { threshold: 0.5 });
+heroObserver.observe(document.querySelector('.hero-stats'));
+</script>
+</body>
+</html>
